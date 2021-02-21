@@ -139,7 +139,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
         tourr::rescale() %>%
         tibble::as_tibble() %>%
         cbind(wc[rv$cond,]) %>%
-        tidyr::pivot_longer(cols = starts_with("O"), names_to="observable") %>%
+        tidyr::pivot_longer(cols = tidyselect::starts_with("O"), names_to="observable") %>%
         dplyr::mutate(observable = factor(observable, levels = paste0("O",1:ncol(pred)))) %>%
         ggplot2::ggplot(ggplot2::aes_string(rv$x, rv$y, fill="value")) +
         ggplot2::geom_tile() +

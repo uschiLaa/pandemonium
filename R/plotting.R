@@ -1,8 +1,12 @@
-# dat is coordinate representation in observable space
-# gr is grouping returned from clustering
-# benchmarkIds gives index values of benchmarks
-# if s=TRUE rescale each variable separately
-# a is alpha level to draw non-benchmark points with
+#' Make parallel coordinate plot
+#'
+#' @param dat coordinate representation of points
+#' @param gr grouping from clustering
+#' @param benchmarkIds index values of benchmarks
+#' @param s rescale (default=FALSE)
+#' @param a alpha transarancy for drawing non-benchmark points (default=0.2)
+#' @return ggplot
+#' @export
 plotPC <- function(dat, gr, benchmarkIds, s=FALSE, a=0.2){
 
   colnames(dat) <- paste0("O",1:ncol(dat))
@@ -25,11 +29,19 @@ plotPC <- function(dat, gr, benchmarkIds, s=FALSE, a=0.2){
           legend.position = "none")
 }
 
-# wc is the full WC data
-# x, y are the variables to plot (as string), in the app these are the first two columns of wc
-# sm, bf are the index values for the (approximate) SM and BF point
-# benchmarkIds is vector of index values for the benchmark points
-# col is vector of colors according to cluster assignment
+#' Show clusters in parameter space
+#'
+#' Parameter values need to be on a regular grid for correct appearance of
+#' this plot.
+#'
+#' @param wc parameter values as matrix
+#' @param x,y variables names (as string) to map to x and y axis
+#' @param sm,bf index values for the SM and BF point
+#' @param benchmarkIds index values of benchmarks
+#' @param col color vector according to cluster assignment
+#' @param cond row numbers of points used for conditioning
+#' @return ggplot
+#' @export
 plotWC <- function(wc, x, y, sm, bf, benchmarkIds, col, cond=NULL){
   if(is.null(cond)) cond <- 1:nrow(wc)
   x_id <- which(colnames(wc)==x)
@@ -48,6 +60,14 @@ plotWC <- function(wc, x, y, sm, bf, benchmarkIds, col, cond=NULL){
     ggplot2::theme(aspect.ratio = 1, legend.position = "none")
 }
 
+#' Plot heatmap with dendrogram
+#'
+#' @param dat coordinate representation of points
+#' @param fit result from hclust
+#' @param k number of clusters
+#' @param pal color palette
+#' @return plot
+#' @export
 plotHeatmap <- function(dat, fit, k, pal){
   dendo <- stats::as.dendrogram(fit) %>%
     dendextend::set("branches_lwd", 3) %>%
@@ -56,6 +76,15 @@ plotHeatmap <- function(dat, fit, k, pal){
   stats::heatmap(dat, Rowv = dendo, Colv = rev(dendo), scale = "none")
 }
 
+#' Plot selected cluster statistics
+#'
+#' @param dist distances
+#' @param fit result from hclust
+#' @param chivals vector of chi2 values
+#' @param stat cluster statistic to draw
+#' @param kmax maximum number of clusters to appear in the plot
+#' @return ggplot
+#' @export
 plotCstat <- function(dist, fit, chivals, stat, kmax=8){
   cstats <- getClusterStats(dist, fit, chivals, kmax)
   ggplot2::ggplot(cstats, ggplot2::aes_string("k", stat)) +
@@ -65,6 +94,18 @@ plotCstat <- function(dist, fit, chivals, stat, kmax=8){
     ggplot2::theme_bw()
 }
 
+#' Make coordinate plot
+#'
+#' Parameter values need to be on a regular grid for correct appearance of
+#' this plot.
+#'
+#' @param coord coordinate representation of points
+#' @param x,y variables names (as string) to map to x and y axis
+#' @param wc parameter values as matrix
+#' @param obs observable to plot
+#' @param cond row numbers of points used for conditioning
+#' @return ggplot
+#' @export
 plotObs <- function(coord, x, y, wc, obs, cond){
   dat <- coord[cond,]
   colnames(dat) <- paste0("O",1:ncol(coord))
@@ -81,6 +122,17 @@ plotObs <- function(coord, x, y, wc, obs, cond){
     ggplot2::theme(aspect.ratio = 1)
 }
 
+#' Plot chi2
+#'
+#' Parameter values need to be on a regular grid for correct appearance of
+#' this plot.
+#'
+#' @param wc parameter values as matrix
+#' @param chi2 vector with chi2 values
+#' @param x,y variables names (as string) to map to x and y axis
+#' @param cond row numbers of points used for conditioning
+#' @return ggplot
+#' @export
 plotChi2 <- function(wc, chi2, x, y, cond){
   dplyr::mutate(wc[cond,], chi2 = chi2[cond]) %>%
     ggplot2::ggplot(ggplot2::aes_string(x, y, fill="chi2")) +
@@ -92,6 +144,19 @@ plotChi2 <- function(wc, chi2, x, y, cond){
     ggplot2::theme(aspect.ratio = 1)
 }
 
+#' Plot sigma bins in parameter space
+#'
+#' Parameter values need to be on a regular grid for correct appearance of
+#' this plot.
+#'
+#' @param wc parameter values as matrix
+#' @param sm,bf index values for the SM and BF point
+#' @param bmID index values for the benchmark points
+#' @param sigmabins binning in sigma
+#' @param x,y variables names (as string) to map to x and y axis
+#' @param cond row numbers of points used for conditioning
+#' @return ggplot
+#' @export
 plotSigBin <- function(wc, sm, bf, bmID, sigmabins, x, y, cond){
   palSig <- RColorBrewer::brewer.pal(length(sigmabins), "Set2")
   colSig <- palSig[sigmabins]
@@ -105,6 +170,14 @@ plotSigBin <- function(wc, sm, bf, bmID, sigmabins, x, y, cond){
     ggplot2::theme(aspect.ratio = 1, legend.position = "none")
 }
 
+#' Make GIF of tour animation.
+#'
+#' Renders the tour animation, stored in file tour_animation.gif
+#'
+#' @param coord coordinate representation of the points
+#' @param col color vector according to group assignment
+#' @param pch vector of plotting symbols
+#' @export
 tourGif <- function(coord, col, pch){
   set.seed(2021)
   colnames(coord) <- paste0("O",1:ncol(coord))
@@ -114,9 +187,21 @@ tourGif <- function(coord, col, pch){
                 frames = 100, rescale = FALSE)
 }
 
-# settings is list with: coord (Pull, pVal), useCov (T/F),
-# metric (euclidean, manhatten, ...), linkage (single, complete, ...),
-# k (number of clusters), plotType (PC, PCscaled, WC)
+#' Make plot as specified in settings
+#'
+#' Used as interface to generate a specific graph seen when using the GUI.
+#' Settings include: coord, useCov, metric, linkage, k, plotType
+#'
+#' @param pred prediction matrix
+#' @param covInv inverse covariance matrix
+#' @param wc matrix specifying the model parameters (on a grid)
+#' @param exp observable reference value (e.g. experimental measurement)
+#' @param settings list specifying parameters usually selected in the app
+#' @param user_coord input coordinate matrix (optional)
+#' @param user_dist input distance matrix (optional)
+#' @param c specification for conditioning
+#' @return ggplot
+#' @export
 makePlots <- function(pred, covInv, wc, exp, settings,
                       user_coord=NULL, user_dist=NULL, c=NULL){
   n <- nrow(pred)
