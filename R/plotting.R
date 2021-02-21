@@ -49,11 +49,11 @@ plotWC <- function(wc, x, y, sm, bf, benchmarkIds, col, cond=NULL){
 }
 
 plotHeatmap <- function(dat, fit, k, pal){
-  dendo <- as.dendrogram(fit) %>%
+  dendo <- stats::as.dendrogram(fit) %>%
     dendextend::set("branches_lwd", 3) %>%
     dendextend::color_branches(k = k, col = pal)
 
-  heatmap(dat, Rowv = dendo, Colv = rev(dendo), scale = "none")
+  stats::heatmap(dat, Rowv = dendo, Colv = rev(dendo), scale = "none")
 }
 
 plotCstat <- function(dist, fit, chivals, stat, kmax=8){
@@ -117,7 +117,8 @@ tourGif <- function(coord, col, pch){
 # settings is list with: coord (Pull, pVal), useCov (T/F),
 # metric (euclidean, manhatten, ...), linkage (single, complete, ...),
 # k (number of clusters), plotType (PC, PCscaled, WC)
-makePlots <- function(pred, covInv, wc, exp, settings, user_coord=NULL, c=NULL){
+makePlots <- function(pred, covInv, wc, exp, settings,
+                      user_coord=NULL, user_dist=NULL, c=NULL){
   n <- nrow(pred)
   chi2 <- computeChi2(pred, covInv, exp)
   sig <- computeSigma(chi2, 2)
@@ -139,9 +140,9 @@ makePlots <- function(pred, covInv, wc, exp, settings, user_coord=NULL, c=NULL){
   }
   coord <- getCoords(settings$coord, settings$useCov, pred, covInv, exp, user_coord)
   dists <- getDists(coord, settings$metric, user_dist)
-  fit <- hclust(dists, settings$linkage)
-  groups <- cutree(fit, k=settings$k)
-  lvl <- unique(groups[order.dendrogram(as.dendrogram(fit))])
+  fit <- stats::hclust(dists, settings$linkage)
+  groups <- stats::cutree(fit, k=settings$k)
+  lvl <- unique(groups[stats::order.dendrogram(stats::as.dendrogram(fit))])
   groups <- as.numeric(factor(groups, levels= lvl))
   pal <- RColorBrewer::brewer.pal(settings$k, "Dark2")
   col <- pal[groups]

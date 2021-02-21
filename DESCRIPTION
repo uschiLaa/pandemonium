@@ -13,9 +13,10 @@ Description: Shiny app to interactively explore clustering in observable space
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 4.0.3)
+Depends: R (>= 4.0.0)
 Imports:
     tourr,
+    stats,
     tibble,
     GGally,
     ggplot2,

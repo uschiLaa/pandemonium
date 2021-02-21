@@ -58,15 +58,15 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
       rv$coord <- getCoords(input$coord, input$useCov, pred, covInv, exp, user_coord)
       dists <- getDists(rv$coord, input$metric, user_dist)
       rv$d_mat <- as.matrix(dists)
-      rv$fit <- hclust(dists, input$linkage)
-      rv$cstats <- getClusterStats(as.dist(rv$d_mat), rv$fit, chi2, 8)
+      rv$fit <- stats::hclust(dists, input$linkage)
+      rv$cstats <- getClusterStats(stats::as.dist(rv$d_mat), rv$fit, chi2, 8)
     }, priority = 99
     )
 
     shiny::observeEvent(c(input$kC, rv$fit), {
       rv$kC <- as.numeric(input$kC)
-      groups <- cutree(rv$fit, k=rv$kC)
-      rv$lvl <- unique(groups[order.dendrogram(as.dendrogram(rv$fit))])
+      groups <- stats::cutree(rv$fit, k=rv$kC)
+      rv$lvl <- unique(groups[stats::order.dendrogram(stats::as.dendrogram(rv$fit))])
       rv$groups <- as.numeric(factor(groups, levels= rv$lvl))
       rv$pal <- RColorBrewer::brewer.pal(rv$kC, "Dark2")
       rv$col <- rv$pal[rv$groups]
@@ -274,7 +274,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
     })
 
     output$umap <- shiny::renderPlot({
-      dist_umap <- as.matrix(uwot::umap(as.dist(rv$d_mat)))
+      dist_umap <- as.matrix(uwot::umap(stats::as.dist(rv$d_mat)))
       colnames(dist_umap) <- c("umap1", "umap2")
       ggplot2::ggplot(tibble::as_tibble(dist_umap),
                       ggplot2::aes(umap1, umap2)) +
@@ -304,7 +304,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
                     'png', paste0(tmp, "/tour-%03d.png"),
                     frames = 100, rescale = F)
-      dist_pca <- prcomp(rv$coord)$x[,1:5]
+      dist_pca <- stats::prcomp(rv$coord)$x[,1:5]
       colnames(dist_pca) <- c("pca1", "pca2", "pca3", "pca4", "pca5")
       tourr::render(dist_pca, tourr::grand_tour(),
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
@@ -351,20 +351,20 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
       distsB <- getDists(coordB, input$metricB, user_dist)
       d_matB <- as.matrix(distsB)
 
-      fitA <- hclust(distsA, input$linkageA)
-      fitB <- hclust(distsB, input$linkageB)
+      fitA <- stats::hclust(distsA, input$linkageA)
+      fitB <- stats::hclust(distsB, input$linkageB)
 
-      groupsA <- cutree(fitA, kA)
-      groupsB <- cutree(fitB, kB)
+      groupsA <- stats::cutree(fitA, kA)
+      groupsB <- stats::cutree(fitB, kB)
 
       palA <- RColorBrewer::brewer.pal(kA, "Dark2")
       groupsA <- as.numeric(factor(groupsA,
-                                   levels=unique(groupsA[order.dendrogram(as.dendrogram(fitA))])))
+                                   levels=unique(groupsA[stats::order.dendrogram(stats::as.dendrogram(fitA))])))
       colA <- palA[groupsA]
 
       palB <- RColorBrewer::brewer.pal(kB, "Set2")
       groupsB <- as.numeric(factor(groupsB,
-                                   levels=unique(groupsB[order.dendrogram(as.dendrogram(fitB))])))
+                                   levels=unique(groupsB[stats::order.dendrogram(stats::as.dendrogram(fitB))])))
       colB <- palB[groupsB]
 
       output$tableAB <- shiny::renderPlot({

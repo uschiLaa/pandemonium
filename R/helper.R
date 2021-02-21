@@ -38,8 +38,8 @@ getCoords <- function(coord, useCov, pred, covInv, exp, user_coord=NULL){
   if (coord=="p-val"){
     for (i in 1:n){
       for (j in 1:nc){
-        if(useCov) coord_mat[i, j] <- pchisq((sum(covInv[j,] * (pred[i,] - exp$value)) / sqrt(covInv[j, j]))^2, df=1)
-        else coord_mat[i, j] <- pchisq((as.numeric((pred[i, j] - exp$value[j]) / sqrt(solve(covInv)[j, j])))^2, df=1)
+        if(useCov) coord_mat[i, j] <- stats::pchisq((sum(covInv[j,] * (pred[i,] - exp$value)) / sqrt(covInv[j, j]))^2, df=1)
+        else coord_mat[i, j] <- stats::pchisq((as.numeric((pred[i, j] - exp$value[j]) / sqrt(solve(covInv)[j, j])))^2, df=1)
       }
     }
     return(coord_mat)
@@ -54,9 +54,9 @@ getCoords <- function(coord, useCov, pred, covInv, exp, user_coord=NULL){
 #' @return distances between all points
 #' @export
 getDists <- function(coord, metric, user_dist=NULL){
-  if(metric == 'euclidean2') dists <- dist(coord)^2
-  else if(metric == "user") dists <- as.dist(user_dist)
-  else dists <- dist(coord, method = metric)
+  if(metric == 'euclidean2') dists <- stats::dist(coord)^2
+  else if(metric == "user") dists <- stats::as.dist(user_dist)
+  else dists <- stats::dist(coord, method = metric)
   return(dists)
 }
 
@@ -169,7 +169,7 @@ getClusterStats <- function(dist, fit, chivals, kmax=10){
                         dmax = numeric(length = kmax-1),
                         dmin = numeric(length = kmax-1))
   for(k in 2:kmax){
-    gr <- cutree(fit, k)
+    gr <- stats::cutree(fit, k)
     chibins <- chi2bins(chivals, 2, k)
 
     x <- fpc::cluster.stats(dist, gr, alt.clustering = chibins)
@@ -198,7 +198,7 @@ getClusterStats <- function(dist, fit, chivals, kmax=10){
 chi2bins <- function(chivals, ndf, k){
   chimin <- min(chivals)
   # map chivals to sigmas
-  sigvals <- sqrt(qchisq(pchisq(chivals-chimin, ndf), 1))
+  sigvals <- sqrt(stats::qchisq(stats::pchisq(chivals-chimin, ndf), 1))
   sigvals <- pmin(sigvals, 5)
   # get bins in sigma
   sigmabins <- seq(0, max(sigvals), length.out = k+1)
@@ -219,7 +219,7 @@ chi2bins <- function(chivals, ndf, k){
 computeSigma <- function(chivals, ndf){
   chimin <- min(chivals)
   # map chivals to sigmas, cutoff at 5
-  pmin(sqrt(qchisq(pchisq(chivals-chimin, ndf), 1)), 5)
+  pmin(sqrt(stats::qchisq(stats::pchisq(chivals-chimin, ndf), 1)), 5)
 }
 
 cstat_names <- list(
