@@ -1,16 +1,9 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-library(shiny)
-
-# Define UI for application that draws a histogram
-ui <- function(ntot, params){
+#' Generating layout for the graphical interface.
+#'
+#' @param params input parameters
+#' @return shiny ui
+#' @keywords internal
+ui <- function(params){
   shiny::fluidPage(
     theme = shinythemes::shinytheme("simplex"),
     shiny::navbarPage(

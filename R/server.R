@@ -1,21 +1,19 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-library(shiny)
-library(plotly)
-library(tourr)
-library(ochRe)
-library(gridExtra)
-library(DT)
-source("clusterviz/helper.R")
-source("clusterviz/plotting.R")
-
+#' Shiny app for exploring clustering solutions
+#'
+#' Opening the GUI to cluster the data points based on the predictions.
+#' Coordinates and distances are computed on the fly, or can be entered
+#' in the function call.
+#'
+#' @param pred prediction matrix
+#' @param covInv inverse covariance matrix
+#' @param wc matrix specifying the model parameters (on a grid)
+#' @param exp observable reference value (e.g. experimental measurement)
+#' @param user_coord input coordinate matrix (optional)
+#' @param user_dist input distance matrix (optional)
+#' @export
+#' @examples \dontrun{
+#' launchApp(b_anomaly$pred, b_anomaly$covInv, b_anomaly$wc, b_anomaly$exp)
+#' }
 launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL){
 
   rv <- shiny::reactiveValues()
@@ -30,6 +28,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
   rv$vz1 <- NULL
   rv$vz2 <- NULL
   rv$cond <- 1:nrow(wc)
+  tmp <- tempdir()
 
   server <- function(input, output, session) {
 
@@ -200,11 +199,11 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
 
       dist_tib <- tibble::as_tibble(diff_m) %>%
         dplyr::mutate(dist = dist_vec, gr1 = as.factor(gr1), gr2 = as.factor(gr2)) %>%
-        dplyr::mutate(match = if_else(gr1==gr2, "within", "between"))
+        dplyr::mutate(match = dplyr::if_else(gr1==gr2, "within", "between"))
 
       p1 <- ggplot2::ggplot(dist_tib,
                             ggplot2::aes(x = dist, y = stat(count / sum(count)))) +
-        ggplot2::geom_histogram(data=select(dist_tib, -gr1, -gr2, -match),
+        ggplot2::geom_histogram(data=dplyr::select(dist_tib, -gr1, -gr2, -match),
                                 fill=NA, color="grey", position="identity") +
         ggplot2::geom_histogram(mapping = ggplot2::aes(color= gr1),
                                 fill=NA, position="identity") +
@@ -233,8 +232,8 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
         ggplot2::scale_fill_manual(values = c("grey", "white")) +
         ggplot2::facet_wrap(.~observable, ncol = 3) +
         ggplot2::theme_bw() +
-        ggplot2::ggtitle("Distribution of coordinate differences within (white)
-                         and between (grey) clusters") +
+        ggplot2::ggtitle("Distribution of coordinate differences between (left)
+                         and within (right) clusters") +
         ggplot2::theme(legend.position = "none",
                        strip.text.y = ggplot2::element_blank())
 
@@ -251,7 +250,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
         tibble::add_column(d = rv$benchmarks$d) %>%
         tibble::add_column(sigma = sig[rv$benchmarks$id])
 
-      formatRound(DT::datatable(
+      DT::formatRound(DT::datatable(
         dt[,c(ncol(wc)+1, 1:ncol(wc), (ncol(wc)+2):ncol(dt))],
         rownames = FALSE),
         2:ncol(dt), digits=2) %>%
@@ -303,20 +302,20 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
       coord <- as.matrix(as.data.frame(rv$coord))
       tourr::render(coord, tourr::grand_tour(),
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
-                    'png', "tour_png/tour-%03d.png",
+                    'png', paste0(tmp, "/tour-%03d.png"),
                     frames = 100, rescale = F)
       dist_pca <- prcomp(rv$coord)$x[,1:5]
       colnames(dist_pca) <- c("pca1", "pca2", "pca3", "pca4", "pca5")
       tourr::render(dist_pca, tourr::grand_tour(),
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
-                    'png', "tour_png/tour-pca-%03d.png",
+                    'png', paste0(tmp, "/tour-pca-%03d.png"),
                     frames = 100, rescale = F)
     })
 
 
     output$tourImg <- shiny::renderImage({
 
-      filename <- sprintf('./clusterviz/tour_png/tour-%03d.png', input$n)
+      filename <- sprintf(paste0(tmp, '/tour-%03d.png'), input$n)
       # Return a list containing the filename and alt text
       list(src = filename,
            width = 400,
@@ -326,7 +325,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
 
     output$tourImgPca <- shiny::renderImage({
 
-      filename <- sprintf('./clusterviz/tour_png/tour-pca-%03d.png', input$npca)
+      filename <- sprintf(paste0(tmp, '/tour-pca-%03d.png'), input$npca)
       # Return a list containing the filename and alt text
       list(src = filename,
            width = 400,
@@ -373,7 +372,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
           as.data.frame() %>%
           ggplot2::ggplot(ggplot2::aes(groupsA, groupsB)) +
           ggplot2::geom_tile(ggplot2::aes(fill = Freq)) +
-          ggplot2::geom_text(aes(label=Freq)) +
+          ggplot2::geom_text(ggplot2::aes(label=Freq)) +
           ochRe::scale_fill_ochre(palette="galah", discrete=FALSE) +
           ggplot2::theme_minimal() +
           ggplot2::xlab("") +
@@ -406,7 +405,7 @@ launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL
 
   }
 
-  shiny::shinyApp(ui(n, colnames(wc)), server)
+  shiny::shinyApp(ui(colnames(wc)), server)
 
 }
 

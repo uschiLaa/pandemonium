@@ -1,14 +1,19 @@
 Package: pandemonium
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Interactive clustering application
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person("Ursula", "Laa",
+           email = "ursula.laa@boku.ac.at",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0002-0249-6439")))
+Description: Shiny app to interactively explore clustering in observable space
+    of physics problems in both parameter and observable space, using a range
+    of visual diagnostics.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 4.0.3)
 Imports:
     tourr,
     tibble,
@@ -27,4 +32,6 @@ Imports:
     gridExtra,
     Rtsne,
     uwot,
-    lle
+    lle,
+    magrittr
+RoxygenNote: 7.1.1
