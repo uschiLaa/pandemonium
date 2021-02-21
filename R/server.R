@@ -12,9 +12,9 @@
 #' @param user_dist input distance matrix (optional)
 #' @export
 #' @examples \dontrun{
-#' launchApp(b_anomaly$pred, b_anomaly$covInv, b_anomaly$wc, b_anomaly$exp)
+#' pandemonium(b_anomaly$pred, b_anomaly$covInv, b_anomaly$wc, b_anomaly$exp)
 #' }
-launchApp <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL){
+pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NULL){
 
   rv <- shiny::reactiveValues()
   n <- nrow(pred)
