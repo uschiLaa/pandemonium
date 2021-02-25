@@ -178,9 +178,14 @@ plotSigBin <- function(wc, sm, bf, bmID, sigmabins, x, y, cond){
 #' @param col color vector according to group assignment
 #' @param pch vector of plotting symbols
 #' @export
-tourGif <- function(coord, col, pch){
+tourGif <- function(coord, col, pch, addOrigin=FALSE){
   set.seed(2021)
   colnames(coord) <- paste0("O",1:ncol(coord))
+  if(addOrigin){
+    coord <- rbind(coord, 0) # adding origin
+    col <- c(col, "black")
+    pch <- c(pch, 18)
+  }
   tourr::render_gif(coord, tourr::grand_tour(),
                 tourr::display_xy(col = col, pch = pch),
                 gif_file = "tour_animation.gif",

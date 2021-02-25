@@ -299,9 +299,9 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
     })
 
     shiny::observeEvent(rv$groups,{
-      coord <- as.matrix(as.data.frame(rv$coord))
-      tourr::render(coord, tourr::grand_tour(),
-                    tourr::display_xy(col = rv$pointcol, pch = rv$pch),
+      tour_data <- tour_coord(rv$coord, rv$pointcol, rv$pch, addOrigin=TRUE)
+      tourr::render(tour_data$coord, tourr::grand_tour(),
+                    tourr::display_xy(col = tour_data$col, pch = tour_data$pch),
                     'png', paste0(tmp, "/tour-%03d.png"),
                     frames = 100, rescale = F)
       dist_pca <- stats::prcomp(rv$coord)$x[,1:min(5, ncol(pred))]

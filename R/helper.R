@@ -237,3 +237,16 @@ cstat_names <- list(
 cstat_labeller <- function(variable,value){
   return(cstat_names[value])
 }
+
+tour_coord <- function(coord, col, pch, addOrigin=FALSE){
+  ret <- list()
+  ret$coord <- as.matrix(as.data.frame(coord))
+  ret$col <- col
+  ret$pch <- pch
+  if(addOrigin){
+    ret$coord <- rbind(ret$coord, 0) # adding origin
+    ret$col <- c(col, "black")
+    ret$pch <- c(pch, 18)
+  }
+  ret
+}
