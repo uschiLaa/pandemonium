@@ -304,8 +304,8 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
                     'png', paste0(tmp, "/tour-%03d.png"),
                     frames = 100, rescale = F)
-      dist_pca <- stats::prcomp(rv$coord)$x[,1:5]
-      colnames(dist_pca) <- c("pca1", "pca2", "pca3", "pca4", "pca5")
+      dist_pca <- stats::prcomp(rv$coord)$x[,1:min(5, ncol(pred))]
+      colnames(dist_pca) <- paste0("pc",1:min(5, ncol(pred)))
       tourr::render(dist_pca, tourr::grand_tour(),
                     tourr::display_xy(col = rv$pointcol, pch = rv$pch),
                     'png', paste0(tmp, "/tour-pca-%03d.png"),
