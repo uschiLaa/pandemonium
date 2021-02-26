@@ -7,7 +7,7 @@ ui <- function(params){
   shiny::fluidPage(
     theme = shinythemes::shinytheme("simplex"),
     shiny::navbarPage(
-      "Interactive cluster visualisation",
+      "pandemonium",
 
   shiny::tabPanel("Input",
   shiny::fluidPage(
