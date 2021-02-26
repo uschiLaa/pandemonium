@@ -128,7 +128,7 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
         ggplot2::geom_line(ggplot2::aes(x=k, y=value)) +
         ggplot2::xlab("# clusters") +
         ggplot2::ylab("") +
-        ggplot2::facet_wrap(~stat, ncol=3, scales = "free_y", labeller=cstat_labeller) +
+        ggplot2::facet_wrap(~stat, ncol=3, scales = "free_y", labeller=cstat_labeller()) +
         ggplot2::theme_bw()
     }, height = 800)
 

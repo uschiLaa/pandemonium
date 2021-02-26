@@ -222,7 +222,7 @@ computeSigma <- function(chivals, ndf){
   pmin(sqrt(stats::qchisq(stats::pchisq(chivals-chimin, ndf), 1)), 5)
 }
 
-cstat_names <- list(
+cstat_names <- c(
   "wb.ratio" = "WB ratio",
   "pearsongamma" = "Normalized gamma",
   "dunn" = "Dunn index",
@@ -234,10 +234,17 @@ cstat_names <- list(
   "dchi2rand" = "ARI with CI binning"
 )
 
-cstat_labeller <- function(variable,value){
-  return(cstat_names[value])
+cstat_labeller <- function(){
+  return(ggplot2::labeller(stat = cstat_names))
 }
 
+#' Wrapper to prepare data for tour
+#'
+#' @param coord coordinate representation of all points
+#' @param col color vector
+#' @param pch pch vector
+#' @param addOrigin set TRUE to add point through the origin
+#' @return list with formatted tour input
 tour_coord <- function(coord, col, pch, addOrigin=FALSE){
   ret <- list()
   ret$coord <- as.matrix(as.data.frame(coord))

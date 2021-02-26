@@ -158,7 +158,7 @@ plotChi2 <- function(wc, chi2, x, y, cond){
 #' @return ggplot
 #' @export
 plotSigBin <- function(wc, sm, bf, bmID, sigmabins, x, y, cond){
-  palSig <- RColorBrewer::brewer.pal(length(sigmabins), "Set2")
+  palSig <- RColorBrewer::brewer.pal(max(sigmabins), "Set2")
   colSig <- palSig[sigmabins]
   ggplot2::ggplot(wc[cond,], ggplot2::aes_string(x, y)) +
     ggplot2::geom_tile(fill= colSig[cond]) +
