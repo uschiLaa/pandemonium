@@ -1,0 +1,28 @@
+---
+title: "Input"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Input}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+To use the app the following inputs are required:
+
+- prediction matrix: each row is a model point, each column the predictions
+for one observable
+- inverse covariance matrix
+- parameter value matrix: each row is a model point, each column gives the
+values of one parameter (columns need to be named)
+- vector of experimentally observed values (alternatively these could be
+predictions for a selected reference point)
+
+Optionally, the user can also supply a coordinate matrix (same format as the
+prediction matrix) and a distance matrix.

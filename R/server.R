@@ -210,6 +210,8 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
         ggplot2::scale_color_brewer(palette="Dark2") +
         ggplot2::facet_grid(gr1~match) +
         ggplot2::theme_bw() +
+        ggplot2::xlab("") +
+        ggplot2::ylab("") +
         ggplot2::ggtitle(
           "Distribution of distances within and between clusters"
           ) +
@@ -232,6 +234,8 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
         ggplot2::scale_fill_manual(values = c("grey", "white")) +
         ggplot2::facet_wrap(.~observable, ncol = 3) +
         ggplot2::theme_bw() +
+        ggplot2::xlab("") +
+        ggplot2::ylab("") +
         ggplot2::ggtitle("Distribution of coordinate differences between (left)
                          and within (right) clusters") +
         ggplot2::theme(legend.position = "none",
