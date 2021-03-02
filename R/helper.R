@@ -159,12 +159,12 @@ getClusterDists <- function(dmat, groups, benchmarks){
 #' @export
 getClusterStats <- function(dist, fit, chivals, kmax=10){
   ret <- tibble::tibble(k = numeric(length = kmax-1),
+                        within.cluster.ss = numeric(length = kmax-1),
                         wb.ratio = numeric(length = kmax-1),
                         ch = numeric(length = kmax-1),
                         pearsongamma = numeric(length = kmax-1),
                         dunn = numeric(length = kmax-1),
                         dchi2rand = numeric(length = kmax-1),
-                        rmin = numeric(length = kmax-1),
                         rmax = numeric(length = kmax-1),
                         dmax = numeric(length = kmax-1),
                         dmin = numeric(length = kmax-1))
@@ -177,10 +177,10 @@ getClusterStats <- function(dist, fit, chivals, kmax=10){
     bmDists <- getClusterDists(as.matrix(dist), gr, bmInfo)
     bmMinDist <- min(bmDists$d1)
 
-    ret[k-1,] <- t(c(k, x$wb.ratio,
+    ret[k-1,] <- t(c(k, x$within.cluster.ss, x$wb.ratio,
                    x$ch, x$pearsongamma, x$dunn,
                    x$corrected.rand,
-                   min(bmInfo$r), max(bmInfo$r), max(bmInfo$d),
+                   max(bmInfo$r), max(bmInfo$d),
                    bmMinDist))
   }
   ret
@@ -223,11 +223,11 @@ computeSigma <- function(chivals, ndf){
 }
 
 cstat_names <- c(
+  "within.cluster.ss" = "Cluster SS",
   "wb.ratio" = "WB ratio",
   "pearsongamma" = "Normalized gamma",
   "dunn" = "Dunn index",
   "ch" = "Calinski and Harabasz index",
-  "rmin" = "Minimum radius",
   "rmax" = "Maximum radius",
   "dmax" = "Maximum diameter",
   "dmin" = "Minimum benchmark distance",

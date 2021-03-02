@@ -123,7 +123,7 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
 
     output$clusterstats <- shiny::renderPlot({
       rv$cstats %>%
-        tidyr::pivot_longer(cols=wb.ratio:dmin, names_to="stat") %>%
+        tidyr::pivot_longer(cols=within.cluster.ss:dmin, names_to="stat") %>%
         ggplot2::ggplot() +
         ggplot2::geom_line(ggplot2::aes(x=k, y=value)) +
         ggplot2::xlab("# clusters") +
