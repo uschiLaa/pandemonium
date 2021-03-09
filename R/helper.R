@@ -54,10 +54,8 @@ getCoords <- function(coord, useCov, pred, covInv, exp, user_coord=NULL){
 #' @return distances between all points
 #' @export
 getDists <- function(coord, metric, user_dist=NULL){
-  if(metric == 'euclidean2') dists <- stats::dist(coord)^2
-  else if(metric == "user") dists <- stats::as.dist(user_dist)
-  else dists <- stats::dist(coord, method = metric)
-  return(dists)
+  if(metric == "user") return(stats::as.dist(user_dist))
+  stats::dist(coord, method = metric)
 }
 
 #' Compute chi2 value for all points

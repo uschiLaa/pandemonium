@@ -29,7 +29,7 @@ ui <- function(params){
                          choices = c("Pull", "p-val")),
       shiny::selectInput("metric", "Distance measure",
                          choices = c("euclidean", "maximum", "manhattan", "canberra",
-                                     "binary", "minkowski", "euclidean2")),
+                                     "binary", "minkowski")),
       shiny::selectInput("kC", "Number of clusters", choices = 2:8),
       shiny::selectInput("px", "x", choices = params, selected = params[1]),
       shiny::selectInput("py", "y", choices = params, selected = params[2]),

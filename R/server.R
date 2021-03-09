@@ -44,13 +44,13 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
     if(!is.null(user_dist)){
       shiny::updateSelectInput(session, "metric",
                                choices = c("euclidean", "maximum", "manhattan", "canberra",
-                                           "binary", "minkowski", "euclidean2", "user"))
+                                           "binary", "minkowski", "user"))
       shiny::updateSelectInput(session, "metricA",
                                choices = c("euclidean", "maximum", "manhattan", "canberra",
-                                           "binary", "minkowski", "euclidean2", "user"))
+                                           "binary", "minkowski", "user"))
       shiny::updateSelectInput(session, "metricB",
                                choices = c("euclidean", "maximum", "manhattan", "canberra",
-                                           "binary", "minkowski", "euclidean2", "user"))
+                                           "binary", "minkowski", "user"))
     }
 
     shiny::observeEvent(c(input$metric, input$coord, input$useCov, input$linkage), {
