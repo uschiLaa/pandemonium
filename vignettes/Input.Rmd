@@ -14,15 +14,40 @@ knitr::opts_chunk$set(
 )
 ```
 
-To use the app the following inputs are required:
+To use the app the user needs to provide a prediction matrix, a covariance matrix, parameter values and experimentally observed values. If experimental observations are not (yet) available, predictions for a reference model can be provided instead. An example dataset is stored in the `b_anomaly` object included in the package and is used below to illustrate the structure of the required inputs.
 
-- prediction matrix: each row is a model point, each column the predictions
-for one observable
-- inverse covariance matrix
-- parameter value matrix: each row is a model point, each column gives the
-values of one parameter (columns need to be named)
-- vector of experimentally observed values (alternatively these could be
-predictions for a selected reference point)
+## Prediction matrix
 
-Optionally, the user can also supply a coordinate matrix (same format as the
-prediction matrix) and a distance matrix.
+Matrix format input where each column corresponds to one observable and each row to one model point. Values are the predictions from the corresponding model, for the corresponding observable. For example, the first five rows and columns of the b anomaly prediction data look like this:
+
+```{r pred}
+pandemonium::b_anomaly$pred[1:5,1:5]
+```
+
+## Inverse covariance matrix
+
+Information of correlated uncertainties are provided in the inverse covariance matrix. A diagonal matrix can be provided in scenarios without correlations. Note that only one matrix is provided, and we assume the uncertainties are independent of the model parameters. The example data contains 14 observables, the inverse covarinace matrix has the following structure:
+
+```{r cov}
+pandemonium::b_anomaly$covInv
+```
+
+## Parameter value matrix
+
+Matrix format input where each column corresponds to one model parameter and each row to one model point. Rows must be sorted in the same order as in the prediction matrix. Columns should be named such that the corresponding parameter can be identified, since these will appear in the graphics. The values in the matrix are the parameter value defining the model. For example, the first five rows of the b anomaly parameter value data look like this:
+
+```{r para}
+pandemonium::b_anomaly$wc[1:5,]
+```
+
+## Experimentally observed values
+
+A vector collecting the experimentally observed values, in the same ordering as they appear in the prediction matrix. If experimental resuls are not available, you could use a vector of model predictions for a selected model instead, for example the Standard Model. The experimental data for the b anomaly example looks like this:
+
+```{r exp}
+pandemonium::b_anomaly$exp
+```
+
+## Optional input
+
+Optionally, the user can also supply a coordinate matrix (this should have the same format as the prediction matrix, but now columns directly correspond to coordinate entries). If required a distance matrix can also be provided. This should be provided as symmetric matrix, both rows and columns correspond to parameter points (sorted as in the parameter value matrix), and values specify the distance (or dissimilarity) between the corresponding points.

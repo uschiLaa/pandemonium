@@ -85,19 +85,119 @@
 
     
     
-<p>To use the app the following inputs are required:</p>
-<ul>
-<li>prediction matrix: each row is a model point, each column the predictions for one observable</li>
-<li>inverse covariance matrix</li>
-<li>parameter value matrix: each row is a model point, each column gives the values of one parameter (columns need to be named)</li>
-<li>vector of experimentally observed values (alternatively these could be predictions for a selected reference point)</li>
-</ul>
-<p>Optionally, the user can also supply a coordinate matrix (same format as the prediction matrix) and a distance matrix.</p>
+<p>To use the app the user needs to provide a prediction matrix, a covariance matrix, parameter values and experimentally observed values. If experimental observations are not (yet) available, predictions for a reference model can be provided instead. An example dataset is stored in the <code>b_anomaly</code> object included in the package and is used below to illustrate the structure of the required inputs.</p>
+<div id="prediction-matrix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#prediction-matrix" class="anchor"></a>Prediction matrix</h2>
+<p>Matrix format input where each column corresponds to one observable and each row to one model point. Values are the predictions from the corresponding model, for the corresponding observable. For example, the first five rows and columns of the b anomaly prediction data look like this:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">pandemonium</span><span class="fu">::</span><span class="va"><a href="../reference/b_anomaly.html">b_anomaly</a></span><span class="op">$</span><span class="va">pred</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
+<span class="co">#&gt;          X1        X2         X3         X4         X5</span>
+<span class="co">#&gt; 1 0.8062348 0.4191362 -0.1120833 -0.4561150 -0.6188300</span>
+<span class="co">#&gt; 2 0.8040091 0.4197212 -0.1129025 -0.4600162 -0.6236414</span>
+<span class="co">#&gt; 3 0.8017150 0.4202643 -0.1137279 -0.4639708 -0.6285015</span>
+<span class="co">#&gt; 4 0.7993505 0.4207638 -0.1145593 -0.4679794 -0.6334100</span>
+<span class="co">#&gt; 5 0.7969132 0.4212175 -0.1153965 -0.4720425 -0.6383664</span></code></pre></div>
+</div>
+<div id="inverse-covariance-matrix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#inverse-covariance-matrix" class="anchor"></a>Inverse covariance matrix</h2>
+<p>Information of correlated uncertainties are provided in the inverse covariance matrix. A diagonal matrix can be provided in scenarios without correlations. Note that only one matrix is provided, and we assume the uncertainties are independent of the model parameters. The example data contains 14 observables, the inverse covarinace matrix has the following structure:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">pandemonium</span><span class="fu">::</span><span class="va"><a href="../reference/b_anomaly.html">b_anomaly</a></span><span class="op">$</span><span class="va">covInv</span>
+<span class="co">#&gt;                 X1          X2           X3           X4           X5</span>
+<span class="co">#&gt;  [1,] 96.253870946 -3.80878152 -1.795066025  -2.34631207  -2.67351268</span>
+<span class="co">#&gt;  [2,] -3.808781515 59.93364936 -7.520985720  -7.73082003  -6.67010715</span>
+<span class="co">#&gt;  [3,] -1.795066025 -7.52098572 42.662500588  -7.74526538  -7.46636949</span>
+<span class="co">#&gt;  [4,] -2.346312073 -7.73082003 -7.745265376  74.54180088 -14.44271640</span>
+<span class="co">#&gt;  [5,] -2.673512684 -6.67010715 -7.466369493 -14.44271640  98.91277558</span>
+<span class="co">#&gt;  [6,] -0.928854435  0.86878425 -0.090660141  -2.19763276  -4.92983309</span>
+<span class="co">#&gt;  [7,] -6.284988292 -9.34696436 -3.028878460   0.82563614   2.91585540</span>
+<span class="co">#&gt;  [8,] -0.899481684 18.21286006 -1.606990857  -2.13487543  -2.21677347</span>
+<span class="co">#&gt;  [9,] -1.275443404  6.67753847  8.988233353   1.83684621  -2.00492083</span>
+<span class="co">#&gt; [10,] -3.139584885  8.66081986  8.763665220  19.41609011  -1.58839649</span>
+<span class="co">#&gt; [11,] -4.556264982  5.92851629  8.968742362   6.74303580  44.62168606</span>
+<span class="co">#&gt; [12,]  4.327940716 -4.16366029  0.033303884   9.14284524  21.48749565</span>
+<span class="co">#&gt; [13,]  0.001396305  0.01223747  0.007127655   0.01243990   0.01842304</span>
+<span class="co">#&gt; [14,]  0.034251223  0.01572006  0.015318637   0.03942586   0.06417251</span>
+<span class="co">#&gt;                 X6           X7           X8           X9          X10</span>
+<span class="co">#&gt;  [1,]  -0.92885443  -6.28498829 -0.899481684  -1.27544340  -3.13958489</span>
+<span class="co">#&gt;  [2,]   0.86878425  -9.34696436 18.212860059   6.67753847   8.66081986</span>
+<span class="co">#&gt;  [3,]  -0.09066014  -3.02887846 -1.606990857   8.98823335   8.76366522</span>
+<span class="co">#&gt;  [4,]  -2.19763276   0.82563614 -2.134875433   1.83684621  19.41609011</span>
+<span class="co">#&gt;  [5,]  -4.92983309   2.91585540 -2.216773472  -2.00492083  -1.58839649</span>
+<span class="co">#&gt;  [6,] 290.36506565   2.25353438 -0.031690436  -1.72110743  -1.75097867</span>
+<span class="co">#&gt;  [7,]   2.25353438 657.81928722 -1.920881981   8.03506459   6.08550870</span>
+<span class="co">#&gt;  [8,]  -0.03169044  -1.92088198 97.322043744  -0.20417151   0.01990273</span>
+<span class="co">#&gt;  [9,]  -1.72110743   8.03506459 -0.204171511  56.03429050 -23.00099854</span>
+<span class="co">#&gt; [10,]  -1.75097867   6.08550870  0.019902733 -23.00099854 148.39568192</span>
+<span class="co">#&gt; [11,]  -0.47006808  -0.04826423 -0.313162392 -24.47849085 -59.09304200</span>
+<span class="co">#&gt; [12,] 356.64659411  -9.41723259  0.149105172   7.35944849   6.95116902</span>
+<span class="co">#&gt; [13,]  -0.02568459   0.01267730  0.002889054   0.00509828   0.02033628</span>
+<span class="co">#&gt; [14,]   0.11222352  -0.02982889  0.002948781   0.01792849   0.03036541</span>
+<span class="co">#&gt;                X11           X12           X13           X14</span>
+<span class="co">#&gt;  [1,]  -4.55626498    4.32794072  1.396305e-03  0.0342512234</span>
+<span class="co">#&gt;  [2,]   5.92851629   -4.16366029  1.223747e-02  0.0157200569</span>
+<span class="co">#&gt;  [3,]   8.96874236    0.03330388  7.127655e-03  0.0153186375</span>
+<span class="co">#&gt;  [4,]   6.74303580    9.14284524  1.243990e-02  0.0394258643</span>
+<span class="co">#&gt;  [5,]  44.62168606   21.48749565  1.842304e-02  0.0641725119</span>
+<span class="co">#&gt;  [6,]  -0.47006808  356.64659411 -2.568459e-02  0.1122235215</span>
+<span class="co">#&gt;  [7,]  -0.04826423   -9.41723259  1.267730e-02 -0.0298288919</span>
+<span class="co">#&gt;  [8,]  -0.31316239    0.14910517  2.889054e-03  0.0029487809</span>
+<span class="co">#&gt;  [9,] -24.47849085    7.35944849  5.098280e-03  0.0179284933</span>
+<span class="co">#&gt; [10,] -59.09304200    6.95116902  2.033628e-02  0.0303654090</span>
+<span class="co">#&gt; [11,] 342.79898656    0.77215089  3.344367e-02  0.0411123592</span>
+<span class="co">#&gt; [12,]   0.77215089 1987.60634756  1.239273e-01 -0.4792428404</span>
+<span class="co">#&gt; [13,]   0.03344367    0.12392730  2.737894e+02  0.0002866193</span>
+<span class="co">#&gt; [14,]   0.04111236   -0.47924284  2.866193e-04 90.1568192847</span></code></pre></div>
+</div>
+<div id="parameter-value-matrix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#parameter-value-matrix" class="anchor"></a>Parameter value matrix</h2>
+<p>Matrix format input where each column corresponds to one model parameter and each row to one model point. Rows must be sorted in the same order as in the prediction matrix. Columns should be named such that the corresponding parameter can be identified, since these will appear in the graphics. The values in the matrix are the parameter value defining the model. For example, the first five rows of the b anomaly parameter value data look like this:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">pandemonium</span><span class="fu">::</span><span class="va"><a href="../reference/b_anomaly.html">b_anomaly</a></span><span class="op">$</span><span class="va">wc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span>
+<span class="co">#&gt;     C9   C10</span>
+<span class="co">#&gt; 1 -1.2 -0.10</span>
+<span class="co">#&gt; 2 -1.2 -0.05</span>
+<span class="co">#&gt; 3 -1.2  0.00</span>
+<span class="co">#&gt; 4 -1.2  0.05</span>
+<span class="co">#&gt; 5 -1.2  0.10</span></code></pre></div>
+</div>
+<div id="experimentally-observed-values" class="section level2">
+<h2 class="hasAnchor">
+<a href="#experimentally-observed-values" class="anchor"></a>Experimentally observed values</h2>
+<p>A vector collecting the experimentally observed values, in the same ordering as they appear in the prediction matrix. If experimental resuls are not available, you could use a vector of model predictions for a selected model instead, for example the Standard Model. The experimental data for the b anomaly example looks like this:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">pandemonium</span><span class="fu">::</span><span class="va"><a href="../reference/b_anomaly.html">b_anomaly</a></span><span class="op">$</span><span class="va">exp</span>
+<span class="co">#&gt;          value</span>
+<span class="co">#&gt; 1   0.52381665</span>
+<span class="co">#&gt; 2   0.36132208</span>
+<span class="co">#&gt; 3  -0.15046389</span>
+<span class="co">#&gt; 4  -0.38598948</span>
+<span class="co">#&gt; 5  -0.58089244</span>
+<span class="co">#&gt; 6  -0.66593579</span>
+<span class="co">#&gt; 7  -0.00216284</span>
+<span class="co">#&gt; 8  -0.44331468</span>
+<span class="co">#&gt; 9  -0.18750292</span>
+<span class="co">#&gt; 10  0.10058144</span>
+<span class="co">#&gt; 11  0.20565218</span>
+<span class="co">#&gt; 12  0.35854424</span>
+<span class="co">#&gt; 13  0.86420355</span>
+<span class="co">#&gt; 14  0.72704068</span></code></pre></div>
+</div>
+<div id="optional-input" class="section level2">
+<h2 class="hasAnchor">
+<a href="#optional-input" class="anchor"></a>Optional input</h2>
+<p>Optionally, the user can also supply a coordinate matrix (this should have the same format as the prediction matrix, but now columns directly correspond to coordinate entries). If required a distance matrix can also be provided. This should be provided as symmetric matrix, both rows and columns correspond to parameter points (sorted as in the parameter value matrix), and values specify the distance (or dissimilarity) between the corresponding points.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
