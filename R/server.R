@@ -115,11 +115,11 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
 
     output$heatmap <- shiny::renderPlot({
       plotHeatmap(rv$d_mat, rv$fit, rv$kC, rv$pal)
-      })
+      }, height = 325)
 
     output$chi2 <- shiny::renderPlot({
       plotChi2(wc, chi2, rv$x, rv$y, rv$cond)
-    })
+    }, height = 325)
 
     output$clusterstats <- shiny::renderPlot({
       rv$cstats %>%
@@ -130,7 +130,7 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
         ggplot2::ylab("") +
         ggplot2::facet_wrap(~stat, ncol=3, scales = "free_y", labeller=cstat_labeller()) +
         ggplot2::theme_bw()
-    }, height = 800)
+    }, height = 600)
 
     output$scalar <- shiny::renderPlot({
       dat <- rv$coord[rv$cond,]
@@ -153,22 +153,22 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
 
     output$pc <- shiny::renderPlot({
       plotPC(rv$coord, rv$groups, rv$benchmarks$id)
-    })
+    }, height = 300)
 
     output$pc2 <- shiny::renderPlot({
       plotPC(rv$coord, rv$groups, rv$benchmarks$id, TRUE)
-    })
+    }, height = 300)
 
     output$wc <- shiny::renderPlot({
       plotWC(wc, rv$x, rv$y, sm, bf, rv$benchmarks$id, rv$col, rv$cond)
-      })
+      }, height = 325)
 
 
     output$sigbins <- shiny::renderPlot({
       plotSigBin(wc, sm, bf, rv$benchmarks$id, rv$sigmabins,
                  rv$x, rv$y, rv$cond)
 
-    })
+    }, height = 325)
 
     output$distText <- shiny::renderText(paste0("Average distance: ",
                                          round(mean(as.vector(rv$d_mat)),1),
@@ -303,7 +303,7 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
     })
 
     shiny::observeEvent(rv$groups,{
-      tour_data <- tour_coord(rv$coord, rv$pointcol, rv$pch, addOrigin=TRUE)
+      tour_data <- tour_coord(rv$coord, rv$pointcol, rv$pch)
       tourr::render(tour_data$coord, tourr::grand_tour(),
                     tourr::display_xy(col = tour_data$col, pch = tour_data$pch),
                     'png', paste0(tmp, "/tour-%03d.png"),
@@ -386,23 +386,23 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
                   ggplot2::element_text(colour = palA, face = "bold", size=15),
                 axis.text.y =
                   ggplot2::element_text(colour = palB, face = "bold", size=15))
-        })
+        }, height = 325)
 
 
       output$wcA <- shiny::renderPlot({
         plotWC(wc, rv$x, rv$y, sm, bf, c(), colA, rv$cond)
-      })
+      }, height = 325)
 
       output$wcB <- shiny::renderPlot({
         plotWC(wc, rv$x, rv$y, sm, bf, c(), colB, rv$cond)
-      })
+      }, height = 325)
 
       output$heatmapA <- shiny::renderPlot({
         plotHeatmap(d_matA, fitA, kA, palA)
-      })
+      }, height = 325)
       output$heatmapB <- shiny::renderPlot({
         plotHeatmap(d_matB, fitB, kB, palB)
-      })
+      }, height = 325)
 
     }
     )

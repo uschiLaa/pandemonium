@@ -41,9 +41,11 @@ ui <- function(params){
     # Show a plot of the generated distribution
     shiny::mainPanel(
       shiny::splitLayout(cellWidths = c("50%", "50%"),
+                         cellArgs = list(style = "height: 325px"),
                   shiny::imageOutput("heatmap"),
                   shiny::imageOutput("chi2")),
       shiny::splitLayout(cellWidths = c("50%", "50%"),
+                         cellArgs = list(style = "height: 325px"),
                   shiny::imageOutput("wc"),
                   shiny::imageOutput("sigbins"))
     )
@@ -134,6 +136,7 @@ ui <- function(params){
                       # Show a plot of the generated distribution
                       shiny::column(8,
                         shiny::splitLayout(cellWidths = c("50%", "50%"),
+                                           cellArgs = list(style = "height: 325px"),
                         shiny::plotOutput("heatmapA"),
                         shiny::plotOutput("heatmapB"))
                       )
@@ -142,6 +145,7 @@ ui <- function(params){
                       shiny::column(4, shiny::plotOutput("tableAB")),
                       shiny::column(8, shiny::splitLayout(
                         cellWidths = c("50%", "50%"),
+                        cellArgs = list(style = "height: 325px"),
                         shiny::plotOutput("wcA"),
                         shiny::plotOutput("wcB")))
                     ))),

@@ -27,6 +27,10 @@ The app has seven separate tabs described below.
 
 # Tab Input
 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./input.png')
+```
+
 Select the settings for clustering from the drop-down lists:
 
 - Linkage
@@ -48,6 +52,10 @@ Next to these selections the tab contains four visualizations:
 
 # Tab Benchmarks
 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./benchmarks.png')
+```
+
 This tab contains a table summarizing information about the clusters
 and benchmark points:
 
@@ -56,6 +64,10 @@ and benchmark points:
 - distance from the best fit (in units of $\sigma$)
 
 # Tab Distance breakdown
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./distances.png')
+```
 
 This tab contains two plots that summarize the distance information:
 
@@ -66,6 +78,10 @@ reference)
 
 # Tab Coordinates
 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./coordinates.png')
+```
+
 This tab contains plots that show the coordinates in different displays:
 
 - the variation of coordinate values across the selected parameter slice
@@ -74,6 +90,10 @@ This tab contains plots that show the coordinates in different displays:
 values (i.e. removing scale differences)
 
 # Tab Dimension Reduction
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./dimred.png')
+```
 
 Showing all points in 2D representations of the observable space, color
 is showing the cluster assignment. Three methods of dimension reduction are
@@ -85,15 +105,27 @@ compared:
 
 # Tab Tour display
 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./tour.png')
+```
+
 A tour display showing the cluster assignment of all points in the full
 observable space (left) or the first five principal components (right).
 
 # Tab Comparison
 
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./comparison.png')
+```
+
 Select two clustering settings for direct comparison in the selected
 parameter space slice and via the heatmap display.
 
 # Tab Statistics
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./stats.png')
+```
 
 A range of cluster statistics evaluated between two and eight clusters:
 
