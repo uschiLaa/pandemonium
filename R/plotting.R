@@ -7,7 +7,7 @@
 #' @param a alpha transarancy for drawing non-benchmark points (default=0.2)
 #' @return ggplot
 #' @export
-plotPC <- function(dat, gr, benchmarkIds, s=FALSE, a=0.2){
+plotPC <- function(dat, gr, benchmarkIds, s=FALSE, a=0.2, ctr=TRUE){
 
   colnames(dat) <- paste0("O",1:ncol(dat))
 
@@ -15,7 +15,7 @@ plotPC <- function(dat, gr, benchmarkIds, s=FALSE, a=0.2){
   alphalvl[benchmarkIds] <- 1
 
   dat %>%
-    scale(center = T, scale = s) %>%
+    scale(center = ctr, scale = s) %>%
     tibble::as_tibble() %>%
     tibble::add_column(gr = factor(gr)) %>%
     tibble::add_column(alphalvl = alphalvl) %>%
@@ -243,6 +243,7 @@ makePlots <- function(pred, covInv, wc, exp, settings,
   benchmarks <- getBenchmarkInformation(as.matrix(dists), groups)
   if(settings$plotType == "PC"){ return( plotPC(coord, groups, benchmarks$id))}
   else if(settings$plotType == "PCscaled"){ return(plotPC(coord, groups, benchmarks$id, TRUE))}
+  else if(settings$plotType == "PCnotcentered"){ return(plotPC(coord, groups, benchmarks$id, ctr=FALSE))}
   else if(settings$plotType == "WC") {return(plotWC(wc, x, y, sm, bf, benchmarks$id, col, cond))}
   else if(settings$plotType == "chi2") {return(plotChi2(wc, chi2, x, y, cond))}
   else if(settings$plotType == "sigBins"){return(plotSigBin(wc, sm, bf, benchmarks$id,
