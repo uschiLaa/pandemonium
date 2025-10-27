@@ -4,6 +4,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+**This repository hosts the original implementation of pandemonium, for an updated version visit https://github.com/GabrielMccoy/pandemonium.**
+
 The goal of pandemonium is to interactively explore clustering solutions
 of physics problems in both observable and parameter space in a Shiny app.
 
