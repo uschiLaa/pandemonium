@@ -4,7 +4,7 @@
 \alias{plotPC}
 \title{Make parallel coordinate plot}
 \usage{
-plotPC(dat, gr, benchmarkIds, s = FALSE, a = 0.2)
+plotPC(dat, gr, benchmarkIds, s = FALSE, a = 0.2, ctr = TRUE)
 }
 \arguments{
 \item{dat}{coordinate representation of points}
@@ -16,6 +16,10 @@ plotPC(dat, gr, benchmarkIds, s = FALSE, a = 0.2)
 \item{s}{rescale (default=FALSE)}
 
 \item{a}{alpha transarancy for drawing non-benchmark points (default=0.2)}
+
+\item{ctr}{Logical; if TRUE, centers the data before plotting (default = TRUE)}
+
+\item{addOrigin}{Logical; if TRUE, adds the origin (0,0) to the plot for reference.}
 }
 \value{
 ggplot

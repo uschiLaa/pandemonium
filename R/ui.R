@@ -3,6 +3,8 @@
 #' @param params input parameters
 #' @return shiny ui
 #' @keywords internal
+#' @importFrom crosstalk bscols
+#' @importFrom detourr displayScatter2dOutput
 ui <- function(params){
   shiny::fluidPage(
     theme = shinythemes::shinytheme("simplex"),
@@ -150,5 +152,11 @@ ui <- function(params){
                         shiny::plotOutput("wcB")))
                     ))),
   shiny::tabPanel("Statistics",
-                  shiny::fluidPage(shiny::plotOutput("clusterstats")))
+                  shiny::fluidPage(shiny::plotOutput("clusterstats"))),
+  
+  shiny::tabPanel("Linked Tours",
+    bscols(
+      displayScatter2dOutput("tour1"),  
+      displayScatter2dOutput("tour2")  
+    ))
 ))}

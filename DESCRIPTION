@@ -34,8 +34,11 @@ Imports:
     Rtsne,
     uwot,
     lle,
-    magrittr
-RoxygenNote: 7.1.1
+    magrittr,
+    detourr,        
+    crosstalk,     
+    htmltools 
+RoxygenNote: 7.3.2
 Suggests: 
     knitr,
     rmarkdown

@@ -406,10 +406,22 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
 
     }
     )
-
+   
+    shared_data <- crosstalk::SharedData$new(as.data.frame(pred))
+    
+    output$tour1 <- detourr::shinyRenderDisplayScatter2d({
+      detourr::detour(shared_data, detourr::tour_aes(projection = -1, colour = rv$groups)) |>
+        detourr::tour_path(tourr::grand_tour(2), fps = 60) |>  
+        detourr::show_scatter(alpha = 0.7, axes = FALSE)
+    })
+    
+    output$tour2 <- detourr::shinyRenderDisplayScatter2d({
+      detourr::detour(shared_data, detourr::tour_aes(projection = -1, colour = rv$groups)) |>
+        detourr::tour_path(tourr::little_tour(2), fps = 60) |>  
+        detourr::show_scatter(alpha = 0.7, axes = FALSE)
+    })
   }
 
   shiny::shinyApp(ui(colnames(wc)), server)
 
 }
-

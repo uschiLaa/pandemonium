@@ -4,7 +4,7 @@
 \alias{tourGif}
 \title{Make GIF of tour animation.}
 \usage{
-tourGif(coord, col, pch)
+tourGif(coord, col, pch, addOrigin = FALSE)
 }
 \arguments{
 \item{coord}{coordinate representation of the points}

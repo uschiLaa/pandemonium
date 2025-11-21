@@ -1,6 +1,8 @@
 #' Make parallel coordinate plot
 #'
 #' @param dat coordinate representation of points
+#' @param ctr Logical; if TRUE, centers the data before plotting (default = TRUE)
+#' @param addOrigin Logical; if TRUE, adds the origin (0,0) to the plot for reference.
 #' @param gr grouping from clustering
 #' @param benchmarkIds index values of benchmarks
 #' @param s rescale (default=FALSE)
