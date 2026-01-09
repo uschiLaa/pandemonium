@@ -150,5 +150,12 @@ ui <- function(params){
                         shiny::plotOutput("wcB")))
                     ))),
   shiny::tabPanel("Statistics",
-                  shiny::fluidPage(shiny::plotOutput("clusterstats")))
+                  shiny::fluidPage(shiny::plotOutput("clusterstats"))),
+  shiny::tabPanel("Detourr",
+                  shiny::fluidPage(
+                      shiny::fluidRow(shiny::column(6,
+                                                  detourr::displayScatter2dOutput("detour1",width = "100%", height = "400px")),          
+                                      shiny::column(6,
+                                                  detourr::displayScatter2dOutput("detour2",width = "100%", height = "400px")))
+                      ))
 ))}

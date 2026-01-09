@@ -34,7 +34,9 @@ Imports:
     Rtsne,
     uwot,
     lle,
-    magrittr
+    magrittr,
+    detourr,
+    crosstalk
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

@@ -407,6 +407,27 @@ pandemonium <- function(pred, covInv, wc, exp, user_coord = NULL, user_dist = NU
     }
     )
 
+    shiny::observeEvent(rv$groups,{
+      detour_data <- as.data.frame(pred)
+      detour_data$colour <- rv$groups
+      rv$shared_detour <- crosstalk::SharedData$new(detour_data)
+      rv$depal <- if (length(unique(rv$groups)) == 2) rv$pal[-3] else rv$pal
+    })
+    
+    output$detour1   <- detourr::shinyRenderDisplayScatter2d(detourr::detour(rv$shared_detour, 
+                                                                             detourr::tour_aes(projection = colnames(pred),colour = colour)) |>
+                                                               detourr::tour_path(detourr::grand_tour(2), fps = 60, 
+                                                                                  max_bases=20) |>
+                                                               detourr::show_scatter(alpha = 0.7, 
+                                                                                     axes = TRUE, scale_factor = 0.4, palette = rv$depal), quoted = FALSE)
+    output$detour2 <- detourr::shinyRenderDisplayScatter2d(detourr::detour(rv$shared_detour, 
+                                                                           detourr::tour_aes(projection = colnames(pred),colour = colour)) |>
+                                                             detourr::tour_path(detourr::local_tour(tourr::basis_random(n=ncol(pred))), fps = 60, 
+                                                                                max_bases=20) |>
+                                                             detourr::show_scatter(alpha = 0.7, 
+                                                                                   axes = TRUE, scale_factor = 0.4, palette = rv$depal), quoted = FALSE)
+    
+
   }
 
   shiny::shinyApp(ui(colnames(wc)), server)
